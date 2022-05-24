@@ -11,15 +11,21 @@ def fill_pdf(input_pdf_path, output_pdf_path, data_dict):
                     key = annotation[ANNOT_FIELD_KEY][1:-1]
                     if key in data_dict.keys():
                         if type(data_dict[key]) == bool:
-                            if data_dict[key] == True:
+                            if data_dict[key]:
                                 annotation.update(pdfrw.PdfDict(
                                     AS=pdfrw.PdfName('Yes')))
+                                # make annotation readonly
+                                annotation.update(pdfrw.PdfDict(Ff=1))
                         else:
                             annotation.update(
                                 pdfrw.PdfDict(V='{}'.format(data_dict[key]))
                             )
                             annotation.update(pdfrw.PdfDict(AP=''))
+                            # make annotation readonly
+                            annotation.update(pdfrw.PdfDict(Ff=1))
+
     pdfrw.PdfWriter().write(output_pdf_path, template_pdf)
+
 
 def print_keys(template_pdf):
     for page in template_pdf.pages:
@@ -30,6 +36,7 @@ def print_keys(template_pdf):
                     key = annotation[ANNOT_FIELD_KEY][1:-1]
                     print(key)
 
+
 def get_data_dict():
     company_name = "test_company"
     requested_by = "hanz zimmermann"
@@ -39,6 +46,7 @@ def get_data_dict():
         'requested_by': requested_by
     }
     return data_dict
+
 
 if __name__ == '__main__':
     company_name = "Test_Company"
