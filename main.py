@@ -10,12 +10,11 @@ def fill_pdf(input_pdf_path, output_pdf_path, data_dict):
                 if annotation[ANNOT_FIELD_KEY]:
                     key = annotation[ANNOT_FIELD_KEY][1:-1]
                     if key in data_dict.keys():
-                        if type(data_dict[key]) == bool:
-                            if data_dict[key]:
-                                annotation.update(pdfrw.PdfDict(
-                                    AS=pdfrw.PdfName('Yes')))
-                                # make annotation readonly
-                                annotation.update(pdfrw.PdfDict(Ff=1))
+                        if type(data_dict[key]) == bool and data_dict[key]:
+                            annotation.update(pdfrw.PdfDict(
+                                AS=pdfrw.PdfName('Yes')))
+                            # make annotation readonly
+                            annotation.update(pdfrw.PdfDict(Ff=1))
                         else:
                             annotation.update(
                                 pdfrw.PdfDict(V='{}'.format(data_dict[key]))
@@ -28,6 +27,7 @@ def fill_pdf(input_pdf_path, output_pdf_path, data_dict):
 
 
 def print_keys(template_pdf):
+    print("list of keys: ")
     for page in template_pdf.pages:
         annotations = page[ANNOT_KEY]
         for annotation in annotations:
